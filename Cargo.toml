@@ -1,0 +1,24 @@
+[package]
+name = "aleo-key-gen"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+age = "0.10.0"
+num_cpus = "1.16.0"
+rand_chacha = { version = "0.3.0", default-features = false}
+rayon = "1.10.0"
+snarkvm = { git = "https://github.com/AleoNet/snarkVM.git", rev = "d170a9f" }
+statrs = "0.17.1"
+base64 = "0.13.0"
+rpassword = "7.3.1"
+
+[dependencies.openssl-sys]
+version = "0.9.102"
+features = ["vendored"]
+
+[profile.release]
+opt-level = "z"  # Use maximum optimization
+lto = true       # Enable link-time optimization
+codegen-units = 1  # Use a single codegen unit for better optimization
+debug = false    # Disable debug information
