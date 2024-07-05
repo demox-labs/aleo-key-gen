@@ -1,5 +1,4 @@
 use age::secrecy::Secret;
-use age::x25519;
 use age::{Encryptor, Decryptor};
 use rand_chacha::rand_core::SeedableRng;
 use snarkvm::prelude::*;
@@ -139,7 +138,7 @@ fn generate_keys(desired_suffix: &str, sample_size: usize, passwords: &Vec<Strin
 }
 
 fn encrypt_private_key(private_key: &PrivateKey<MainnetV0>, password: &str) -> Result<String, Box<dyn std::error::Error>> {
-  let encryptor = age::Encryptor::with_user_passphrase(Secret::new(password.to_owned()));
+  let encryptor = Encryptor::with_user_passphrase(Secret::new(password.to_owned()));
 
   let mut encrypted = vec![];
   let mut writer = encryptor.wrap_output(&mut encrypted)?;
