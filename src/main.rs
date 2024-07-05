@@ -80,7 +80,7 @@ fn get_password(password_number: u8) -> String {
 
 fn read_passwords(num_passwords: u8) -> Vec<String> {
     let mut passwords = vec![];
-    for mut i in 0..num_passwords {
+    for i in 0..num_passwords {
         let password = get_password(i + 1);
         
         passwords.push(password);
