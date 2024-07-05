@@ -1,6 +1,7 @@
-# Aleo Vanity address generator
+# Aleo Secure Key generator
 
 Want an Aleo address with a specific suffix? Now you can.
+Output the results as encrypted by the passwords
 
 ## Usage
 

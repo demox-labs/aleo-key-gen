@@ -12,6 +12,8 @@ snarkvm = { git = "https://github.com/AleoNet/snarkVM.git", rev = "d170a9f" }
 statrs = "0.17.1"
 base64 = "0.13.0"
 rpassword = "7.3.1"
+serde = { version = "1.0.203", features = ["derive"] }
+serde_json = "1.0"
 
 [dependencies.openssl-sys]
 version = "0.9.102"
