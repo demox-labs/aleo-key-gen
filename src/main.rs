@@ -63,17 +63,26 @@ fn main() {
     }
 }
 
+
+fn get_password(password_number: u8) -> String {
+    loop {
+        println!("Enter password {}: ", password_number);
+        let password = read_password().expect("Error reading password");
+        println!("Confirm password {}: ", password_number);
+        let confirm_password = read_password().expect("Error reading password");
+        if password == confirm_password {
+            return password;
+        } else {
+            println!("Passwords do not match, try again.");
+        }
+    }
+}
+
 fn read_passwords(num_passwords: u8) -> Vec<String> {
     let mut passwords = vec![];
     for mut i in 0..num_passwords {
-        println!("Enter password {}: ", i + 1);
-        let password = read_password().expect("Error reading password");
-        let confirm_password = read_password().expect("Error reading password");
-        if password != confirm_password {
-            eprintln!("Passwords do not match. Please try again.");
-            i -= 1;
-            continue;
-        }
+        let password = get_password(i + 1);
+        
         passwords.push(password);
     }
     passwords
@@ -96,7 +105,7 @@ fn generate_keys(desired_suffix: &str, sample_size: usize, passwords: &Vec<Strin
                     let (private_key, address) = generate_keypair(&mut rng);
                     guess_count.fetch_add(1, Ordering::Relaxed);
 
-                    if guess_count.load(Ordering::Relaxed) % 100_000 == 0 {
+                    if guess_count.load(Ordering::Relaxed) % 1000 == 0 {
                         println!("Number of guesses: {}", guess_count.load(Ordering::Relaxed));
                     }
 
