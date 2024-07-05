@@ -65,9 +65,16 @@ fn main() {
 
 fn read_passwords(num_passwords: u8) -> Vec<String> {
     let mut passwords = vec![];
-    for i in 0..num_passwords {
+    for mut i in 0..num_passwords {
         println!("Enter password {}: ", i + 1);
-        passwords.push(read_password().expect("Error reading password"));
+        let password = read_password().expect("Error reading password");
+        let confirm_password = read_password().expect("Error reading password");
+        if password != confirm_password {
+            eprintln!("Passwords do not match. Please try again.");
+            i -= 1;
+            continue;
+        }
+        passwords.push(password);
     }
     passwords
 }
