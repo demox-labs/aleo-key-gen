@@ -215,6 +215,7 @@ fn decrypt_command<N: Network>(encrypted_key_file: &str, password1: &str, passwo
     let concatenated_password = password1.to_owned() + password2;
     let private_key = decrypt_private_key(encrypted_key_file, &concatenated_password).unwrap();
     println!("Decrypted address: {}", Address::<N>::try_from(&private_key).unwrap().to_string());
+    println!("Decrypted private key: {}", private_key.to_string());
 }
 
 fn decrypt_and_authorize<N: Network, A: Aleo<Network = N>>(encrypted_key_file: &str, password1: &str, password2: &str, programs: Vec<String>, program_id: &str, function: &str, inputs: Vec<String>, fee_microcredits: u64) -> Result<String, String>
