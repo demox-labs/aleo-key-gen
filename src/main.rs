@@ -40,12 +40,21 @@ fn main() {
                 std::process::exit(1);
             }
             let desired_suffix = &args[2];
+            for c in desired_suffix.chars() {
+                match c {
+                    '1' | 'b' | 'i' | 'o' => {
+                        eprintln!("The desired suffix contains the disallowed character '{}'. Please choose a different suffix", c);
+                        std::process::exit(1);
+                    }
+                    _ => {}
+                }
+            }
             let sample_size: usize = args[3].parse().unwrap();
 
             // Read passwords from users securely
-            let passwords = read_passwords(4u8);
+            // let passwords = read_passwords(4u8);
 
-            generate_keys(desired_suffix, sample_size, &passwords);
+            generate_keys(desired_suffix, sample_size);
         }
         "decrypt" => {
             if args.len() != 3 {
@@ -129,7 +138,7 @@ fn read_passwords(num_passwords: u8) -> Vec<String> {
     passwords
 }
 
-fn generate_keys(desired_suffix: &str, sample_size: usize, passwords: &Vec<String>) {
+fn generate_keys(desired_suffix: &str, sample_size: usize) {
     let guess_count = Arc::new(AtomicUsize::new(0));
     let found = Arc::new(AtomicUsize::new(0));
 
@@ -138,7 +147,6 @@ fn generate_keys(desired_suffix: &str, sample_size: usize, passwords: &Vec<Strin
             let guess_count = Arc::clone(&guess_count);
             let found = Arc::clone(&found);
             let desired_suffix = desired_suffix.to_string();
-            let passwords = passwords.clone();
 
             s.spawn(move |_| {
                 let mut rng = ChaCha20Rng::from_entropy();
@@ -154,21 +162,7 @@ fn generate_keys(desired_suffix: &str, sample_size: usize, passwords: &Vec<Strin
                         // We found an address with the desired suffix, print it
                         println!("Found address: {}", address.to_string());
                         found.fetch_add(1, Ordering::Relaxed);
-
-                        // Encrypt the private key with passwords from two people
-                        for i in 0..passwords.len() {
-                            for j in i + 1..passwords.len() {
-                                let password1 = &passwords[i];
-                                let password2 = &passwords[j];
-                                let concatenated_password = password1.to_owned() + password2;
-                                let encrypted_key = encrypt_private_key(&private_key, &concatenated_password).unwrap();
-                                // Decrypt the encrypted key & verify it
-                                let decrypted_key = decrypt_private_key(&encrypted_key, &concatenated_password).unwrap();
-                                assert_eq!(private_key, decrypted_key);
-                                // Print the index of each password pair & the encrypted key
-                                println!("{}: {} {} {}", address.to_string(), i, j, encrypted_key);
-                            }
-                        }
+                        println!("Private Key: {}", private_key.to_string());
                     }
                 }
             });
